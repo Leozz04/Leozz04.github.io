@@ -1,0 +1,45 @@
+# Daily copy of the resume PDF from the private codex-ziqian repo.
+# Needs a repo secret RESUME_TOKEN: a fine-grained token with read-only
+# "Contents" access to Leozz04/codex-ziqian. Without it the job does nothing.
+name: Sync resume
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      RESUME_TOKEN: ${{ secrets.RESUME_TOKEN }}
+      SRC_REPO: Leozz04/codex-ziqian
+      SRC_PATH: projects/resume/Ziqian_Zhang_Resume_2027_Corrected.pdf
+    steps:
+      - name: Check token
+        id: check
+        run: |
+          if [ -z "$RESUME_TOKEN" ]; then
+            echo "RESUME_TOKEN not set; skipping."; echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.skip != 'true'
+      - name: Download resume
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          curl -fsSL -H "Authorization: Bearer $RESUME_TOKEN" -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/$SRC_REPO/contents/$SRC_PATH" -o /tmp/resume.pdf
+          head -c 4 /tmp/resume.pdf | grep -q '%PDF'
+          cp /tmp/resume.pdf assets/resume.pdf
+      - name: Commit if changed
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          git diff --quiet -- assets/resume.pdf && { echo "Resume unchanged."; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add assets/resume.pdf
+          git commit -m "Update resume from $SRC_REPO"
+          git push
