@@ -22,9 +22,9 @@ Anthropic 自己的 monorepo 就是一个例子：每天合并的代码变更从
 
 我的答案是人只需要掌管三件事：
 
-1. Resources
-2. Rules / permission
-3. Insight
+1. **Resources**：钱、算力、账号、数据。
+2. **Rules**：权限，以及 agent 不能越过的线。
+3. **Insight**：知道工作发现了什么。
 
 为什么？前两项不用过多说明，第三项我认为是最重要的。随着 AI 的能力越来越强，即便工作可以 offload 给 agent，但假如人类和 AI 的知识不能同步，不能和 AI 在推进的同时一起成长，人类在长久失去上下文认知的节奏下会慢慢失去 judge AI 判断的能力。因此必然需要有外部的 harness 来负责帮助人类理解 AI 到底在做什么。这三点无法被内化进任何 base model。
 
