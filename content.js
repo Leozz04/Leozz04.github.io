@@ -38,6 +38,7 @@ window.SITE = {
 
   // Newest first.
   news: [
+    { date: "2026-11", text: "New on the <a href=\"blog/\">blog</a>: <a href=\"blog/r2i/\">R²I: what a harness is for when the agent is smart enough</a>." },
     { date: "2026-10", text: "Launched <a href=\"https://openlair.github.io/red-flag-research.github.io/\" target=\"_blank\" rel=\"noopener\">Red-flag Research</a>: public screening of ICLR 2027 submissions for paper laundering." },
     { date: "2026-06", text: "Joined the Xing Lab, Department of Radiation Oncology, Stanford Medicine, as a student research intern." },
     { date: "2026", text: "<b>RankLLM</b> accepted at ICLR 2026 (co-first author)." },
