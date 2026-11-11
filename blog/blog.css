@@ -11,7 +11,7 @@
 .lang-toggle button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
 
 .post-head { margin-bottom: 32px; }
-.post-logo { display: block; width: 160px; height: 160px; margin: 0 0 20px; border-radius: 50%; }
+.post-logo { display: block; width: 160px; height: 160px; margin: 0 0 20px; }
 .post-head h1, .index-title { font: 600 34px/1.2 var(--serif); margin: 0 0 10px; }
 .byline { color: var(--muted); font-size: 14px; margin: 0; }
 
