@@ -63,14 +63,14 @@ TOGGLE = ('<div class="lang-toggle" role="group" aria-label="Language">'
           '<button type="button" data-set-lang="zh">中文</button></div>')
 
 
-def md(path):
-    return subprocess.run(["pandoc", path, "-f", "markdown", "-t", "html5", "--wrap=none"],
+def md(path, prefix):
+    return subprocess.run(["pandoc", path, "-f", "markdown", "-t", "html5", "--wrap=none", "--id-prefix=" + prefix],
                           check=True, capture_output=True, text=True).stdout
 
 
 def build_post(p):
     d = os.path.join(HERE, p["slug"])
-    body = {k: md(os.path.join(d, k + ".md")) for k in ("en", "zh")}
+    body = {k: md(os.path.join(d, k + ".md"), k + "-") for k in ("en", "zh")}  # prefix keeps footnote ids unique per language
     out = [HEAD.format(lang="en", title=html.escape(p["en"]), desc=html.escape(p["sum_en"]), root="../../")]
     out.append('<main class="post">')
     out.append('<nav class="crumbs"><a href="../../">Home</a> · <a href="../">Blog</a></nav>')

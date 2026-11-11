@@ -10,7 +10,7 @@
 
 这就引来了一个现实问题，人该如何与 next-gen AI 一起 cowork？拿 research 来说，在 past-gen AI 的时候，绝大部分工作还得人自己干，AI 基本只能辅助一下写代码和润色 paper，人基本要亲自盯着代码、或者完整跟进每一个实验的过程和数据，才能拿到一个靠谱的结果。到了今年这一代，虽然 Auto Research 有很多问题，但大量具体执行的工作已经可以 offload，人只需要把控大方向、做 pivot 就够了，不用再 code review。
 
-Anthropic 自己的 monorepo 就是一个例子：每天合并的代码变更从 2026 年 5 月的约 2,500 个涨到 9 月的 30,000 多个，git 本身成了瓶颈，于是换成了自研的 Scion；他们的工程师看的是变更的意图，不再逐行读代码（见文末原文）。
+Anthropic 自己的 monorepo 就是一个例子：每天合并的代码变更从 2026 年 5 月的约 2,500 个涨到 9 月的 30,000 多个，git 本身成了瓶颈，于是换成了自研的 Scion；他们的工程师看的是变更的意图，不再逐行读代码。[^scion]
 
 但是，在今年这一代，“对话”依旧不可或缺，人还是需要和 AI 持续对话来 pivot 或者查看 AI 的总结，再手动把聊天转交给跑实验的 Agent，或者靠 [SuperARIS](https://github.com/wanshuiyin/SuperARIS) 这类第三方框架去做集成（且不论现在很多第三方集成工具的质量还不如直接用基模厂商的 Claude Code、Codex）。
 
@@ -52,7 +52,7 @@ Anthropic 自己的 monorepo 就是一个例子：每天合并的代码变更从
 
 当 base model 足够强，agent 之间的废话全是 noise 和信息丢失。在同时推进 5 到 6 个项目时，依赖 CLI 或聊天窗口和 context window 的 compression 会导致严重的上下文遗漏。每个 Session 都有自己的 Context Window、Compaction、Handoff 和 Memory。随着项目运行，这些信息会不断分叉和重复，如果不加管制，Claude Code 和 Codex 能在几天内把电脑磁盘占满，文件夹充满上亿随机命名的文件；context window 上百万时，每次调用都会重新读取一遍缓存和极长的记忆上下文，compaction 又不可避免地带来严重的信息损失和降智。
 
-Anthropic 最近讲 agent memory 的文章也划了同样的界线：compaction 不算 memory；memory 是 agent 为以后的 session 有意写下的东西，而且需要维护，不然会随环境变化而过时（见文末原文）。
+Anthropic 最近讲 agent memory 的文章也划了同样的界线：compaction 不算 memory；memory 是 agent 为以后的 session 有意写下的东西，而且需要维护，不然会随环境变化而过时。[^memory]
 
 因此，真正需要解决的是如何让 Agent 在只读取任务必要上下文的前提下，恢复足够完整的“sanity”，即对当前项目/任务的理解。
 
@@ -88,18 +88,6 @@ Tools + Rules + Resources + Persistent State，而不是 skills + prompt。
 
 **第四，奏折越来越少。** 随着 AI 能力越来越强，需要人看的报告和 Edict 会逐渐减少。
 
-## 原文
+[^scion]: [Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control)，Anthropic Engineering，2026-10-13。原文：“as of September, we merged over 30,000 per day.” · “[…] examine the intent of the change as opposed to reading every line of code.”
 
-文中引用的两篇 Anthropic 文章。这里只摘短句，全文请看原文。
-
-**[The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)**，Lance Martin，Anthropic，2026-11-06。
-
-> […] knowledge that Claude gains from experience […] saved as context it can read later.
-
-> Memory can also drift and become irrelevant as the environment changes.
-
-**[Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control)**，Anthropic Engineering，2026-10-13。
-
-> as of September, we merged over 30,000 per day.
-
-> […] examine the intent of the change as opposed to reading every line of code.
+[^memory]: [The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)，Lance Martin，Anthropic，2026-11-06。原文：“[…] knowledge that Claude gains from experience […] saved as context it can read later.” · “Memory can also drift and become irrelevant as the environment changes.”

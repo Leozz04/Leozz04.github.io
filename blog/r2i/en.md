@@ -16,7 +16,7 @@ In research, last-generation AI helped with code and with polishing papers, and 
 
 The current generation changes that. Automated research still has real problems, but most of the execution can be offloaded. The human sets direction and decides when to pivot; code review is no longer needed.
 
-Anthropic shows what this looks like at scale. Its monorepo went from about 2,500 merged changes a day in May 2026 to more than 30,000 a day in September, driven by how much of its software Claude now writes, and git itself became the bottleneck, so it was replaced with an in-house system, Scion ([*Redesigning source control at Anthropic*](https://www.anthropic.com/engineering/redesigning-source-control)). People there still sign off on changes, but they check the intent of a change rather than reading every line; adversarial review and automated testing carry the rest. Nobody reads 30,000 diffs a day.
+Anthropic shows what this looks like at scale. Its monorepo went from about 2,500 merged changes a day in May 2026 to more than 30,000 a day in September, driven by how much of its software Claude now writes, and git itself became the bottleneck, so it was replaced with an in-house system, Scion.[^scion] People there still sign off on changes, but they check the intent of a change rather than reading every line; adversarial review and automated testing carry the rest. Nobody reads 30,000 diffs a day.
 
 Conversation, however, is still at the center. You talk to the model to change course, you read its summaries, and then you carry the conversation over by hand to whichever agent runs the experiments, or you rely on a third-party framework such as [SuperARIS](https://github.com/wanshuiyin/SuperARIS) to wire them together (and many third-party integration tools are still not as good as the vendors' own Claude Code and Codex).
 
@@ -60,7 +60,7 @@ The loop I want is different. The person and the agent agree on a goal and on ho
 
 Once the base model is strong enough, the chatter between agents is pure noise and information loss. Run five or six projects at once through CLIs, chat windows and context-window compression, and large parts of the context simply go missing. Every session has its own context window, compaction, handoff and memory. As the projects run, all of this keeps forking and duplicating. Left unmanaged, Claude Code and Codex can fill a computer's disk within days and leave folders holding hundreds of millions of randomly named files. With context windows in the millions of tokens, every call re-reads the cache and an extremely long memory context, and compaction inevitably brings serious information loss and makes the agent dumber.
 
-Anthropic's recent post on agent memory draws the same line ([*The components of agent memory*](https://www.anthropic.com/research/components-of-agent-memory)). It treats compaction as a separate mechanism, not memory. Memory is what an agent deliberately writes down for future sessions: notes, linked wiki pages, and a small set of facts injected into every session. Even that injected layer has to stay small, since it costs tokens on every call and spreads any error it contains.
+Anthropic's recent post on agent memory draws the same line.[^memory] It treats compaction as a separate mechanism, not memory. Memory is what an agent deliberately writes down for future sessions: notes, linked wiki pages, and a small set of facts injected into every session. Even that injected layer has to stay small, since it costs tokens on every call and spreads any error it contains.
 
 So the real problem is how to let an agent, reading only the context its task needs, recover enough "sanity": a sound understanding of the current project and task.
 
@@ -98,18 +98,6 @@ R²I today is built for the current generation. Four changes I expect as base mo
 
 **Fewer edicts over time.** As models get better, the list of things only a human must decide should shrink: fewer approval pages, shorter reports. The ledger still keeps everything for anyone who wants to audit it.
 
-## Sources
+[^scion]: [Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control), Anthropic Engineering, Oct 13, 2026. “as of September, we merged over 30,000 per day.” · “[…] examine the intent of the change as opposed to reading every line of code.”
 
-The two Anthropic posts this essay leans on. Short excerpts only; read the originals in full.
-
-**[The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory)**, Lance Martin, Anthropic, Nov 6, 2026.
-
-> […] knowledge that Claude gains from experience […] saved as context it can read later.
-
-> Memory can also drift and become irrelevant as the environment changes.
-
-**[Redesigning source control at Anthropic](https://www.anthropic.com/engineering/redesigning-source-control)**, Anthropic Engineering, Oct 13, 2026.
-
-> as of September, we merged over 30,000 per day.
-
-> […] examine the intent of the change as opposed to reading every line of code.
+[^memory]: [The components of agent memory](https://www.anthropic.com/research/components-of-agent-memory), Lance Martin, Anthropic, Nov 6, 2026. “[…] knowledge that Claude gains from experience […] saved as context it can read later.” · “Memory can also drift and become irrelevant as the environment changes.”

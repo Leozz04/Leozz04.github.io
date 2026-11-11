@@ -36,6 +36,14 @@
 .post article[data-lang="en"] figcaption::before { content: "Figure " counter(fig) ". "; font-weight: 600; color: var(--text); }
 .post article[data-lang="zh"] figcaption::before { content: "图 " counter(fig) "　"; font-weight: 600; color: var(--text); }
 
+/* Footnotes (pandoc): small, after a rule. */
+.post .footnote-ref { text-decoration: none; padding: 0 1px; }  /* pandoc already wraps the number in <sup> */
+.post .footnotes { margin-top: 48px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+.post .footnotes hr { border: 0; border-top: 1px solid var(--border); margin: 0 0 12px; }
+.post .footnotes ol { padding-left: 20px; }
+.post .footnotes li { margin-bottom: 8px; }
+.post .footnote-back { text-decoration: none; margin-left: 4px; }
+
 .post-list { list-style: none; padding: 0; margin: 24px 0 0; }
 .post-list li { padding: 16px 0; border-bottom: 1px solid var(--border); }
 .post-list time { display: block; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
