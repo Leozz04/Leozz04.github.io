@@ -77,6 +77,7 @@ def build_post(p):
     out.append(TOGGLE)
     for k in ("en", "zh"):
         out.append('<article data-lang="%s"%s>' % (k, "" if k == "en" else " hidden"))
+        out.append('<img class="post-logo" src="img/logo.jpg" alt="R²I logo" width="160" height="160">')
         out.append('<header class="post-head"><h1>%s</h1><p class="byline">%s · <time datetime="%s">%s</time></p></header>'
                    % (html.escape(p[k]), AUTHOR, p["date"], p["date"]))
         out.append(body[k])
